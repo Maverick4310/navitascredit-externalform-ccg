@@ -7,7 +7,7 @@ const SF_ENDPOINT =
 // ZIP lookup endpoint (same base as PG — reuses the PG endpoint's GET handler)
 const SF_ZIP_ENDPOINT =
  // "https://navitascredit.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
-"https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
+ "https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -572,12 +572,23 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(payload),
       });
 
+      console.group("🔍 DEBUG: API Response");
+      console.log("HTTP Status:", resp.status);
+      console.log("HTTP Status Text:", resp.statusText);
+      console.log("Response Headers:");
+      resp.headers.forEach((value, key) => console.log(`  ${key}: ${value}`));
+
       let data = null;
+      const rawText = await resp.text();
+      console.log("Raw Response Body:", rawText);
+
       try {
-        data = await resp.json();
-      } catch {
-        // non-json response
+        data = JSON.parse(rawText);
+        console.log("Parsed JSON:", JSON.stringify(data, null, 2));
+      } catch (parseErr) {
+        console.error("Failed to parse response as JSON:", parseErr);
       }
+      console.groupEnd();
 
       if (!resp.ok || !data?.success) {
         const msg =
