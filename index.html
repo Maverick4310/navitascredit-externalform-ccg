@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Navitas | Corporate Guarantor Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d5c6e 0%, #1a8a9e 100%);
+      color: #fff;
+      padding: 24px 32px;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .sub {
+      opacity: 0.92;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .banner {
+      padding: 12px 24px;
+      background: #fef3cd;
+      border-left: 4px solid #ffc107;
+      color: #856404;
+    }
+
+    .banner.ok {
+      background: #d4edda;
+      border-left-color: #28a745;
+      color: #155724;
+    }
+
+    .banner.err {
+      background: #f8d7da;
+      border-left-color: #dc3545;
+      color: #721c24;
+    }
+
+    .banner.hidden {
+      display: none;
+    }
+
+    .content {
+      padding: 32px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+
+    .hint {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    /* Guarantor sections */
+    .guarantor-section {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      background: #fafafa;
+    }
+
+    .guarantor-section:first-of-type {
+      background: #fff;
+    }
+
+    .guarantor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .guarantor-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0d5c6e;
+    }
+
+    .remove-btn {
+      background: none;
+      border: 1px solid #dc3545;
+      color: #dc3545;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .remove-btn:hover {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    /* Grid layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .req {
+      color: #dc3545;
+    }
+
+    .field input,
+    .field select {
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+      color: #333;
+      height: 46px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: #1a8a9e;
+      box-shadow: 0 0 0 3px rgba(26, 138, 158, 0.15);
+    }
+
+    .field input::placeholder {
+      color: #999;
+    }
+
+    .field input.invalid,
+    .field select.invalid {
+      border-color: #dc3545;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    }
+
+    .field-error {
+      font-size: 0.7rem;
+      color: #dc3545;
+      margin-top: 4px;
+    }
+
+    .help {
+      font-size: 0.7rem;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    /* Readonly field styling */
+    .field input[readonly] {
+      background: #f5f5f5;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    /* City selection dropdown */
+    .city-select-wrapper {
+      position: relative;
+    }
+
+    .city-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #1a8a9e;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 100;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 4px;
+    }
+
+    .city-options.hidden {
+      display: none;
+    }
+
+    .city-option {
+      padding: 12px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      transition: background 0.2s;
+    }
+
+    .city-option:last-child {
+      border-bottom: none;
+    }
+
+    .city-option:hover {
+      background: #e8f4f6;
+    }
+
+    .city-option-name {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .city-option-detail {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    /* Loading indicator for ZIP lookup */
+    .zip-loading {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border: 2px solid #e0e0e0;
+      border-top-color: #1a8a9e;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .field.zip-field {
+      position: relative;
+    }
+
+    /* Add guarantor button */
+    .add-guarantor-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: #fff;
+      border: 2px dashed #1a8a9e;
+      border-radius: 8px;
+      color: #1a8a9e;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .add-guarantor-btn:hover {
+      background: #e8f4f6;
+      border-color: #0d5c6e;
+      color: #0d5c6e;
+    }
+
+    .add-guarantor-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e5e5e5;
+      margin: 28px 0;
+    }
+
+    .disclosure {
+      font-size: 0.7rem;
+      color: #999;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      padding: 16px;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    #submitBtn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: #fff;
+      border: none;
+      padding: 14px 48px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #submitBtn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    #submitBtn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    #submitBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .fineprint {
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 16px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="header">
+        <div class="brand">Navitas Credit Corp.</div>
+        <div class="sub">Corporate Guarantor Form</div>
+      </div>
+
+      <div id="banner" class="banner hidden"></div>
+
+      <div class="content">
+        <h1 id="title">Corporate Guarantor Information</h1>
+        <p class="hint">Please complete the fields below. This is a secure link.</p>
+
+        <form id="cgForm" method="POST" action="#" novalidate>
+          <div id="guarantorsContainer">
+            <!-- First Corporate Guarantor (cannot be removed) -->
+            <div class="guarantor-section" data-guarantor="1">
+              <div class="guarantor-header">
+                <span class="guarantor-title">Corporate Guarantor 1</span>
+              </div>
+              <div class="grid">
+                <div class="field full">
+                  <label for="companyName_1">Company Name <span class="req">*</span></label>
+                  <input id="companyName_1" name="guarantors[0][companyName]" autocomplete="organization" required />
+                </div>
+
+                <div class="field">
+                  <label for="streetNumber_1">Street Number <span class="req">*</span></label>
+                  <input id="streetNumber_1" name="guarantors[0][streetNumber]" inputmode="numeric" autocomplete="off" required />
+                </div>
+
+                <div class="field">
+                  <label for="streetName_1">Street Name <span class="req">*</span></label>
+                  <input id="streetName_1" name="guarantors[0][streetName]" autocomplete="off" required />
+                </div>
+
+                <div class="field">
+                  <label for="streetType_1">Street Type <span class="req">*</span></label>
+                  <select id="streetType_1" name="guarantors[0][streetType]" required>
+                    <option value="">Select…</option>
+                    <option value="St">St</option>
+                    <option value="Ave">Ave</option>
+                    <option value="Blvd">Blvd</option>
+                    <option value="Dr">Dr</option>
+                    <option value="Ln">Ln</option>
+                    <option value="Rd">Rd</option>
+                    <option value="Ct">Ct</option>
+                    <option value="Cir">Cir</option>
+                    <option value="Pkwy">Pkwy</option>
+                    <option value="Way">Way</option>
+                    <option value="Pl">Pl</option>
+                    <option value="Ter">Ter</option>
+                    <option value="Hwy">Hwy</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="field zip-field">
+                  <label for="zip_1">ZIP <span class="req">*</span></label>
+                  <input id="zip_1" name="guarantors[0][zip]" inputmode="numeric" autocomplete="postal-code" maxlength="10" required />
+                  <div class="help">Enter ZIP to auto-fill city/state.</div>
+                </div>
+
+                <div class="field city-select-wrapper">
+                  <label for="city_1">City <span class="req">*</span></label>
+                  <input id="city_1" name="guarantors[0][city]" autocomplete="off" required readonly />
+                  <div class="help">Auto-filled from ZIP code.</div>
+                  <div id="cityOptions_1" class="city-options hidden"></div>
+                </div>
+
+                <div class="field">
+                  <label for="state_1">State <span class="req">*</span></label>
+                  <input id="state_1" name="guarantors[0][state]" autocomplete="off" required readonly />
+                  <div class="help">Auto-filled from ZIP code.</div>
+                </div>
+
+                <div class="field">
+                  <label for="phone_1">Phone <span class="req">*</span></label>
+                  <input id="phone_1" name="guarantors[0][phone]" autocomplete="tel" minlength="10" required />
+                  <div class="help">Minimum 10 digits.</div>
+                </div>
+
+                <div class="field">
+                  <label for="federalTaxId_1">Federal Tax ID (EIN)</label>
+                  <input
+                    id="federalTaxId_1"
+                    name="guarantors[0][federalTaxId]"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="12-3456789"
+                  />
+                  <div class="help">9 digits (dash optional). Optional.</div>
+                </div>
+
+                <div class="field">
+                  <label for="email_1">Email</label>
+                  <input id="email_1" name="guarantors[0][email]" type="email" autocomplete="email" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="add-guarantor-btn" id="addGuarantorBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Add Another Corporate Guarantor
+          </button>
+
+          <div class="divider"></div>
+
+          <div class="disclosure">
+            By clicking the "SUBMIT" button below, the undersigned corporate entity hereby authorizes the release of any and all credit information from the above listed references, and certifies that all information provided is true and correct to the best of its knowledge. The listed corporate entity(ies), recognizing that its/their credit history may be a factor in the evaluation of the credit applicant, hereby consent(s) to and authorize(s) the credit provider (Navitas Credit Corp. or its assignees) to obtain and use a business credit report on the listed entity(ies), now and from time to time, as may be needed in the credit evaluation and review process.
+          </div>
+
+          <div class="actions">
+            <button id="submitBtn" type="submit" disabled>SUBMIT</button>
+          </div>
+
+          <div class="fineprint">
+            <span class="req">*</span> Required fields
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
