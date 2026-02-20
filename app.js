@@ -1,8 +1,8 @@
 // app.js — Corporate Guarantor Form
 
 const SF_ENDPOINT =
-  "https://navitascredit.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg";
-// "https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg";
+//  "https://navitascredit.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg";
+ "https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg";
 
 // ZIP lookup endpoint (same base as PG — reuses the PG endpoint's GET handler)
 const SF_ZIP_ENDPOINT =
