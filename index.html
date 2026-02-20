@@ -401,9 +401,14 @@
                 <span class="guarantor-title">Corporate Guarantor 1</span>
               </div>
               <div class="grid">
-                <div class="field full">
+                <div class="field">
                   <label for="companyName_1">Company Name <span class="req">*</span></label>
                   <input id="companyName_1" name="guarantors[0][companyName]" autocomplete="organization" required />
+                </div>
+
+                <div class="field">
+                  <label for="dba_1">Doing Business As (DBA)</label>
+                  <input id="dba_1" name="guarantors[0][dba]" autocomplete="off" />
                 </div>
 
                 <div class="field">
@@ -477,6 +482,19 @@
                 <div class="field">
                   <label for="email_1">Email</label>
                   <input id="email_1" name="guarantors[0][email]" type="email" autocomplete="email" />
+                </div>
+
+                <div class="field">
+                  <label for="yearsInBusiness_1">Years in Business</label>
+                  <input
+                    id="yearsInBusiness_1"
+                    name="guarantors[0][yearsInBusiness]"
+                    type="number"
+                    min="0"
+                    max="999"
+                    step="1"
+                    placeholder="e.g., 10"
+                  />
                 </div>
               </div>
             </div>
