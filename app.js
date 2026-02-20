@@ -164,7 +164,7 @@ function validateForm() {
 async function lookupZip(zip) {
   try {
     const resp = await fetch(SF_ZIP_ENDPOINT + encodeURIComponent(zip), {
-      method: "GET",
+     
       headers: { "Content-Type": "application/json" },
     });
     if (!resp.ok) return null;
