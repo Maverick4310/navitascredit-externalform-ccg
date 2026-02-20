@@ -6,8 +6,8 @@ const SF_ENDPOINT =
 
 // ZIP lookup endpoint (same base as PG — reuses the PG endpoint's GET handler)
 const SF_ZIP_ENDPOINT =
-//  "https://navitascredit.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
- "https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
+ // "https://navitascredit.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
+"https://navitascredit--IFSNAV19.sandbox.my.salesforce-sites.com/creditapp/services/apexrest/externalform/cg?zip=";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -164,7 +164,7 @@ function validateForm() {
 async function lookupZip(zip) {
   try {
     const resp = await fetch(SF_ZIP_ENDPOINT + encodeURIComponent(zip), {
-     
+      method: "GET",
       headers: { "Content-Type": "application/json" },
     });
     if (!resp.ok) return null;
@@ -297,6 +297,13 @@ function buildPayloadFromForm(form, token) {
       // Normalize empty optional fields
       if (g.email === "") delete g.email;
       if (g.federalTaxId === "") delete g.federalTaxId;
+      if (g.dba === "") delete g.dba;
+      if (g.yearsInBusiness !== undefined && g.yearsInBusiness !== null && g.yearsInBusiness !== "") {
+        const n = Number(g.yearsInBusiness);
+        g.yearsInBusiness = Number.isFinite(n) ? n : null;
+      } else {
+        delete g.yearsInBusiness;
+      }
       return g;
     });
 
@@ -330,9 +337,14 @@ function createGuarantorHTML(index) {
       <button type="button" class="remove-btn" onclick="removeGuarantor(this)">Remove</button>
     </div>
     <div class="grid">
-      <div class="field full">
+      <div class="field">
         <label for="companyName_${index}">Company Name <span class="req">*</span></label>
         <input id="companyName_${index}" name="guarantors[${index - 1}][companyName]" autocomplete="organization" required />
+      </div>
+
+      <div class="field">
+        <label for="dba_${index}">Doing Business As (DBA)</label>
+        <input id="dba_${index}" name="guarantors[${index - 1}][dba]" autocomplete="off" />
       </div>
 
       <div class="field">
@@ -406,6 +418,19 @@ function createGuarantorHTML(index) {
       <div class="field">
         <label for="email_${index}">Email</label>
         <input id="email_${index}" name="guarantors[${index - 1}][email]" type="email" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="yearsInBusiness_${index}">Years in Business</label>
+        <input
+          id="yearsInBusiness_${index}"
+          name="guarantors[${index - 1}][yearsInBusiness]"
+          type="number"
+          min="0"
+          max="999"
+          step="1"
+          placeholder="e.g., 10"
+        />
       </div>
     </div>
   `;
@@ -534,6 +559,8 @@ document.addEventListener("DOMContentLoaded", () => {
           phone: g.phone || "❌ NULL/EMPTY",
           federalTaxId: g.federalTaxId || "(not provided)",
           email: g.email || "(not provided)",
+          dba: g.dba || "(not provided)",
+          yearsInBusiness: g.yearsInBusiness ?? "(not provided)",
         });
         console.groupEnd();
       });
